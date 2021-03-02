@@ -35,7 +35,7 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
 
 ARG CHANGE_SOURCE=false
 ARG UBUNTU_SOURCE
-COPY ./../sources.sh /tmp/sources.sh
+COPY ./sources.sh /tmp/sources.sh
 
 RUN if [ ${CHANGE_SOURCE} = true ]; then \
     /bin/sh -c /tmp/sources.sh && \

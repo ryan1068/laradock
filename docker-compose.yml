@@ -231,6 +231,13 @@ services:
         - "9000"
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
+        - "4snewapi.local:192.168.2.182"
+        - "cst-micro-store.local:192.168.2.182"
+        - "cst-group.local:192.168.2.182"
+        - "cst-store.local:192.168.2.182"
+        - "cst-app.local:192.168.2.182"
+        - "cst-api.local:192.168.2.182"
+        - "zdadmin.dev.test.cn:192.168.2.188"
       environment:
         - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
         - DOCKER_HOST=tcp://docker-in-docker:2375
@@ -403,6 +410,46 @@ services:
         - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
       ports:
         - "${MYSQL_PORT}:3306"
+      networks:
+        - backend
+
+### MySQL ################################################
+    mysql1:
+      build:
+        context: ./mysql1
+        args:
+          - MYSQL_VERSION=${MYSQL_VERSION}
+      environment:
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - TZ=${WORKSPACE_TIMEZONE}
+      volumes:
+        - ${DATA_PATH_HOST}/mysql1:/var/lib/mysql
+        - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+      ports:
+        - "3307:3306"
+      networks:
+        - backend
+
+### MySQL ################################################
+    mysql2:
+      build:
+        context: ./mysql2
+        args:
+          - MYSQL_VERSION=${MYSQL_VERSION}
+      environment:
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - TZ=${WORKSPACE_TIMEZONE}
+      volumes:
+        - ${DATA_PATH_HOST}/mysql2:/var/lib/mysql
+        - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+      ports:
+        - "3308:3306"
       networks:
         - backend
 
@@ -798,6 +845,7 @@ services:
       volumes:
         - './logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml'
         - './logstash/pipeline:/usr/share/logstash/pipeline'
+        - ./logs/logstash/:/var/log/logstash
       ports:
         - '5001:5001'
       environment:
