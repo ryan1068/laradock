@@ -51,6 +51,7 @@ ARG UBUNTU_SOURCE
 COPY ./sources.sh /tmp/sources.sh
 
 RUN if [ ${CHANGE_SOURCE} = true ]; then \
+    chmod 755 /tmp/sources.sh &&\
     /bin/sh -c /tmp/sources.sh && \
     rm -rf /tmp/sources.sh \
 ;fi
@@ -1261,7 +1262,7 @@ ARG INSTALL_RDKAFKA=false
 
 RUN if [ ${INSTALL_RDKAFKA} = true ]; then \
     apt-get install -y librdkafka-dev && \
-    pecl install rdkafka && \
+    pecl install rdkafka-4.1.2 && \
     echo "extension=rdkafka.so" >> /etc/php/${LARADOCK_PHP_VERSION}/mods-available/rdkafka.ini && \
         ln -s /etc/php/${LARADOCK_PHP_VERSION}/mods-available/rdkafka.ini /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/30-rdkafka.ini \
 ;fi

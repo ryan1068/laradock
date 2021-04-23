@@ -38,6 +38,7 @@ ARG UBUNTU_SOURCE
 COPY ./sources.sh /tmp/sources.sh
 
 RUN if [ ${CHANGE_SOURCE} = true ]; then \
+    chmod 755 /tmp/sources.sh &&\
     /bin/sh -c /tmp/sources.sh && \
     rm -rf /tmp/sources.sh \
 ;fi
